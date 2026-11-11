@@ -18,6 +18,7 @@
     "lab:setup": "node scripts/setup-docker.mjs",
     "lab:up": "node scripts/up.mjs",
     "lab:down": "docker compose down",
+    "lab:approve": "node scripts/approve-browser.mjs",
     "lab:tunnel-url": "docker compose logs tunnel 2>&1 | grep -o 'https://[a-z0-9-]*\\.trycloudflare\\.com' | tail -1",
     "db": "node data/csv-to-db.cjs",
     "db:reset": "node data/csv-to-db.cjs --reset",

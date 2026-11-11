@@ -85,3 +85,14 @@ docker compose exec gateway node /app/openclaw.mjs cron list --all
 
 ## 實作用的對話卡
 上午、下午情境要貼給 AI 的句子在 [`prompts/`](prompts/)：[上午情境](prompts/上午情境_複製貼上卡.md)、[下午情境](prompts/下午情境_複製貼上卡.md)。Dashboard 開新對話，照卡上的順序貼。
+
+
+## 遠端（Codespaces）第一次開 Dashboard
+
+畫面出現「核准此瀏覽器 / device pairing required」是正常的安全機制（遠端網址的瀏覽器要先被 Gateway 認識，每個瀏覽器只需一次）。在終端機執行：
+
+```bash
+npm run lab:approve
+```
+
+回到瀏覽器，頁面會自動連線。
