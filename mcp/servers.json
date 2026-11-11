@@ -1,0 +1,30 @@
+{
+  "inventory": {
+    "command": "node",
+    "args": [
+      "/home/node/mcp/inventory-core.cjs"
+    ],
+    "env": {
+      "INVENTORY_DB": "/home/node/data/inventory.db"
+    }
+  },
+  "stock": {
+    "command": "node",
+    "args": [
+      "/home/node/mcp/get-stock-server.cjs"
+    ],
+    "env": {
+      "INVENTORY_DB": "/home/node/data/inventory.db"
+    }
+  },
+  "importer": {
+    "command": "node",
+    "args": [
+      "/home/node/mcp/csv-import-server.cjs"
+    ],
+    "env": {
+      "INVENTORY_DB": "/home/node/data/inventory.db",
+      "CSV_PATH": "/home/node/data/inventory.csv"
+    }
+  }
+}

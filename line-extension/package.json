@@ -1,0 +1,7 @@
+{
+  "name": "axis-classroom-line-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pinned official LINE plugin; OpenClaw host is supplied by the Docker base image.",
+  "dependencies": {"@openclaw/line": "2026.9.8"}
+}

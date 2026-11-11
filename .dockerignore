@@ -1,0 +1,13 @@
+node_modules
+.state
+.secrets
+.env
+.env.*
+!.env.example
+*.sqlite*
+*.log
+.git
+__pycache__
+test
+
+**/__pycache__

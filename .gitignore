@@ -1,0 +1,19 @@
+node_modules/
+.state/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+
+.secrets/
+__pycache__/
+*.sqlite*
+*.db
+
+# Local acceptance evidence, not source
+*-check.json
+validation.json
+backups/
+run-*.log
+reliability-repair-runtime.json

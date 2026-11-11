@@ -1,0 +1,6 @@
+order_id,customer,product_id,quantity,status,created_at
+O0001,王先生,P002,10,done,2026-11-03 10:12
+O0002,林小姐,P001,6,done,2026-11-03 11:40
+O0003,陳老闆,P003,12,done,2026-11-03 14:05
+O0004,王先生,P004,3,cancelled,2026-11-03 15:30
+O0005,林小姐,P005,2,done,2026-11-03 16:48

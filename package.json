@@ -1,0 +1,27 @@
+{
+  "name": "axis-openclaw-line-lab",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "dependencies": {
+    "openclaw": "2026.9.8"
+  },
+  "scripts": {
+    "init": "node scripts/init.mjs",
+    "claw": "node scripts/claw.mjs",
+    "gateway": "node scripts/claw.mjs gateway run",
+    "webhook": "node scripts/webhook.mjs",
+    "test": "node --test test/webhook.test.mjs",
+    "lab:setup": "node scripts/setup-docker.mjs",
+    "lab:up": "node scripts/up.mjs",
+    "lab:down": "docker compose down",
+    "lab:tunnel-url": "docker compose logs tunnel 2>&1 | grep -o 'https://[a-z0-9-]*\\.trycloudflare\\.com' | tail -1",
+    "db": "node data/csv-to-db.cjs",
+    "db:reset": "node data/csv-to-db.cjs --reset",
+    "mcp:check": "docker compose restart gateway && sleep 12 && docker compose exec gateway node /app/openclaw.mjs mcp probe",
+    "mcp:test": "node scripts/mcp-test.mjs"
+  }
+}

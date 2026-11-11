@@ -1,0 +1,38 @@
+{
+  "name": "AXIS OpenClaw Lab",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "asadbek.sheetjs-demo"
+      ]
+    }
+  },
+  "hostRequirements": {
+    "cpus": 2
+  },
+  "forwardPorts": [
+    18795,
+    18081
+  ],
+  "portsAttributes": {
+    "18795": {
+      "label": "私人 OpenClaw Dashboard — KEEP PRIVATE",
+      "onAutoForward": "notify"
+    },
+    "18081": {
+      "label": "LINE Webhook only — 公開前先完成驗簽設定",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "npm install --no-audit --no-fund --prefix mcp && node scripts/setup-docker.mjs && node --test test/webhook.test.mjs && bash scripts/install-cloudflared.sh",
+  "remoteUser": "vscode"
+}

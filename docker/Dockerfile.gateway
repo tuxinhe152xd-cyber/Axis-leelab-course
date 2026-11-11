@@ -1,0 +1,12 @@
+FROM ghcr.io/openclaw/openclaw:2026.9.8
+USER root
+COPY line-extension/package.json line-extension/package-lock.json /opt/axis/line/
+RUN npm ci --prefix /opt/axis/line --omit=dev --ignore-scripts --legacy-peer-deps --no-audit --no-fund --cache /tmp/axis-npm-cache \
+    && ln -s /app /opt/axis/line/node_modules/openclaw \
+    && rm -rf /tmp/axis-npm-cache
+COPY workspace/ /opt/axis/workspace/
+COPY docker/start-gateway.mjs docker/model-config.mjs /opt/axis/
+# Host checkouts (e.g. Codespaces) may be mode 666; OpenClaw refuses world-writable plugin paths.
+RUN chmod -R a+rX,go-w /opt/axis
+USER node
+ENTRYPOINT ["node", "/opt/axis/start-gateway.mjs"]
