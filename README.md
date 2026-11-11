@@ -15,7 +15,7 @@
    npm run lab:setup
    ```
    這會建立 `.env` 與一把只有你自己的 Gateway token。
-3. **填金鑰**：打開 `.env`，**只要在 `MODEL_API_KEY=` 後面貼上老師給的 OpenRouter 金鑰**（供應商、網址、模型 `anthropic/claude-haiku-5.5` 已預設好）。要改用 Anthropic 官方金鑰：把 `MODEL_PROVIDER` 改成 `anthropic` 並填 `ANTHROPIC_API_KEY`。**`.env` 不會被 Git 追蹤，不要貼到聊天或截圖裡。**
+3. **填金鑰**：打開 `.env`，**只要在 `MODEL_API_KEY=` 後面貼上老師給的 OpenRouter 金鑰**（供應商、網址、模型 `anthropic/claude-sonnet-5.5` 已預設好）。要改用 Anthropic 官方金鑰：把 `MODEL_PROVIDER` 改成 `anthropic` 並填 `ANTHROPIC_API_KEY`。**`.env` 不會被 Git 追蹤，不要貼到聊天或截圖裡。**
 4. **啟動**：
    ```bash
    npm run lab:up
