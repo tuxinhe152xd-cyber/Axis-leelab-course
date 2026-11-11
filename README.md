@@ -28,7 +28,12 @@
    ```bash
    grep '^AXIS_GATEWAY_TOKEN=' .secrets/gateway.env | cut -d= -f2
    ```
-6. **開始訪談**：在 Dashboard 開一個**新對話**，輸入：
+6. **核准這個瀏覽器（Codespaces 第一次開會需要，只做一次）**：如果畫面出現「核准此瀏覽器 / device pairing required」，這是正常的安全機制（遠端網址的瀏覽器要先被 Gateway 認識）。**不要關掉那個頁面**，回到終端機執行：
+   ```bash
+   npm run lab:approve
+   ```
+   頁面會自動連線。之後同一個瀏覽器不會再問；換瀏覽器或清除網站資料才要再做一次。自己電腦上用 `127.0.0.1` 開不會出現。
+7. **開始訪談**：在 Dashboard 開一個**新對話**，輸入：
    ```text
    $workflow-decompose 我想用 AI 幫忙處理工作，請開始。
    ```
@@ -53,7 +58,7 @@
 | `workspace/AGENTS.md`、`workspace/skills/`、`mcp/`、`.env` | `docker compose restart gateway`（`.env` 要用 `docker compose up -d`） |
 | `docker/` 裡的檔案、`Dockerfile` | `docker compose up --build -d` |
 
-**Agent 能用的工具與 skill 是精簡過的**：只開放 `read`、你的 MCP 工具，以及（打開 `AXIS_CRON=1` 後）排程工具、（打開 `AXIS_WEB_FETCH=1` 後）`web_fetch`；仍然**沒有**執行指令的工具；skill 只列 `workflow-decompose`。這樣每次呼叫的基底只有約 6,000 tokens（沒精簡時約 34,000）。要多裝一個 skill，或想多開一個工具，要改 `docker/start-gateway.mjs` 裡的 `skills` 與 `alsoAllow`，再 `docker compose up --build -d`。
+**Agent 能用的工具與 skill 是精簡過的**：只開放 `read`、你的 MCP 工具，以及排程工具、`web_fetch`；仍然**沒有**執行指令的工具；skill 只列 `workflow-decompose`。這樣每次呼叫的基底只有約 6,000 tokens（沒精簡時約 34,000）。要多裝一個 skill，或想多開一個工具，要改 `docker/start-gateway.mjs` 裡的 `skills` 與 `alsoAllow`，再 `docker compose up --build -d`。
 
 **排程怎麼建、結果在哪裡看**：在對話裡請 AI 建。AI 會先講清楚名稱、時間、內容，你說「好，確定」才建，而且一律建成**停用**。到 Dashboard 左側「自動化」找到它，按「立即執行」先測一次，結果在「執行記錄」分頁；確定沒問題再打開「啟用中」開關。也可以自己在「自動化」頁「新增自動化」：「重複」選 Cron（例如 `30 7 * * *`）、「時區」填 `Asia/Taipei`、「傳送」維持「無（內部）」。
 （喜歡指令的話，`docker compose exec gateway node /app/openclaw.mjs cron add …` 也可以，但**預設不顯示停用的工作**，要加 `cron list --all`。）
@@ -86,13 +91,3 @@ docker compose exec gateway node /app/openclaw.mjs cron list --all
 ## 實作用的對話卡
 上午、下午情境要貼給 AI 的句子在 [`prompts/`](prompts/)：[上午情境](prompts/上午情境_複製貼上卡.md)、[下午情境](prompts/下午情境_複製貼上卡.md)。Dashboard 開新對話，照卡上的順序貼。
 
-
-## 遠端（Codespaces）第一次開 Dashboard
-
-畫面出現「核准此瀏覽器 / device pairing required」是正常的安全機制（遠端網址的瀏覽器要先被 Gateway 認識，每個瀏覽器只需一次）。在終端機執行：
-
-```bash
-npm run lab:approve
-```
-
-回到瀏覽器，頁面會自動連線。
