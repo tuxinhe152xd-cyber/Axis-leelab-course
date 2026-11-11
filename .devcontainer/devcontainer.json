@@ -12,7 +12,9 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "asadbek.sheetjs-demo"
+        "asadbek.sheetjs-demo",
+        "GrapeCity.gc-excelviewer",
+        "mechatroner.rainbow-csv"
       ]
     }
   },
