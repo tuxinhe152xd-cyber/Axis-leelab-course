@@ -86,7 +86,7 @@ docker compose exec gateway node /app/openclaw.mjs cron list --all
 - Dashboard 的「自動化」頁（建立、立即執行、暫停、執行記錄）在隔離的測試堆疊上實際操作驗證過。
 - **GitHub Codespaces 上的完整流程尚未在這個新倉庫實測。**
 - OpenRouter 的模型尚未實測，skill 的規則遵守度可能不同。
-- LINE 是下午情境的選修（下午卡第 6 步）：外掛與通道已寫好、預設關閉，新倉庫的完整 LINE 流程尚未真人實測。
+- LINE 是下午情境的選修（下午卡第 6 步）：預設關閉，要用再照卡片步驟開啟。
 
 ## 實作用的對話卡
 上午、下午情境要貼給 AI 的句子在 [`prompts/`](prompts/)：[上午情境](prompts/上午情境_複製貼上卡.md)、[下午情境](prompts/下午情境_複製貼上卡.md)。Dashboard 開新對話，照卡上的順序貼。
