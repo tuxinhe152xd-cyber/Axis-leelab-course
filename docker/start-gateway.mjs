@@ -31,9 +31,10 @@ if(process.env.CODESPACE_NAME){const n=process.env.CODESPACE_NAME,d=process.env.
 // Scheduling and web fetch are always on (the lessons need them); there is no .env switch any more, so an old .env cannot turn them off.
 const cronOn=true,webFetchOn=true;
 // Codespaces forwards every request through GitHub's proxy (X-Forwarded-* headers); the Gateway rejects that unless the proxy hop is trusted. Only the lab's own Docker subnet is trusted, and only inside a Codespace (on a laptop the browser connects directly, and trusting the bridge would reject it).
+// 2026-11-14: temperature 0.2 (steadier tool use and numbers). Set via agents.defaults.models[<provider/model>].params; verify it reaches the model before relying on it.
 const config={
  gateway:{mode:'local',bind:'lan',port:18789,auth:{mode:'token',token:process.env.AXIS_GATEWAY_TOKEN},...(process.env.CODESPACE_NAME?{trustedProxies:['172.28.77.0/24']}:{}),controlUi:{allowedOrigins:origins},http:{endpoints:{chatCompletions:{enabled:true}}}},
- agents:{ownership:'explicit',defaults:{workspace,skipBootstrap:true,skills:['workflow-decompose'],heartbeat:{every:'0m'},model:{primary:selected.primary},maxConcurrent:2},entries:{main:{}}},
+ agents:{ownership:'explicit',defaults:{workspace,skipBootstrap:true,skills:['workflow-decompose'],heartbeat:{every:'0m'},model:{primary:selected.primary},models:{[selected.primary]:{params:{temperature:0.2}}},maxConcurrent:2},entries:{main:{}}},
  session:{dmScope:'per-channel-peer'},
  models:{mode:'merge',providers:{classroom:selected.provider}},
  cron:{enabled:cronOn},
