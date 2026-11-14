@@ -30,17 +30,26 @@ if(process.env.CODESPACE_NAME){const n=process.env.CODESPACE_NAME,d=process.env.
 // Opt-in features, switched on in .env when a lesson needs them: AXIS_CRON=1 (scheduler), AXIS_WEB_FETCH=1 (agent may fetch web pages).
 // Scheduling and web fetch are always on (the lessons need them); there is no .env switch any more, so an old .env cannot turn them off.
 const cronOn=true,webFetchOn=true;
+// Local experiment (off by default): AXIS_MULTI_AGENT=1 adds a second agent, "reviewer", and lets main and reviewer talk (sessions_send / sessions_spawn).
+// It widens what the model may do, so the classroom default stays off and the Codespace .env does not set it.
+const multi=process.env.AXIS_MULTI_AGENT==='1';
+const reviewerWs=state+'/workspace/reviewer';
+if(multi){
+ await mkdir(reviewerWs,{recursive:true,mode:0o700});
+ await rm(reviewerWs+'/AGENTS.md',{force:true});
+ await writeFile(reviewerWs+'/AGENTS.md','# reviewer\n\nYou are the reviewer agent. When another agent sends you a draft or an answer, check it for mistakes, missing steps and unsupported claims, then reply in Traditional Chinese with a short list: what is fine, what to fix. Do not change data. Keep it under 8 lines.\n',{mode:0o600});
+}
 // Codespaces forwards every request through GitHub's proxy (X-Forwarded-* headers); the Gateway rejects that unless the proxy hop is trusted. Only the lab's own Docker subnet is trusted, and only inside a Codespace (on a laptop the browser connects directly, and trusting the bridge would reject it).
 // 2026-11-14: temperature 0.2 (steadier tool use and numbers). Set via agents.defaults.models[<provider/model>].params; verify it reaches the model before relying on it.
 const config={
  gateway:{mode:'local',bind:'lan',port:18789,auth:{mode:'token',token:process.env.AXIS_GATEWAY_TOKEN},...(process.env.CODESPACE_NAME?{trustedProxies:['172.28.77.0/24']}:{}),controlUi:{allowedOrigins:origins},http:{endpoints:{chatCompletions:{enabled:true}}}},
- agents:{ownership:'explicit',defaults:{workspace,skipBootstrap:true,skills:['workflow-decompose'],heartbeat:{every:'0m'},model:{primary:selected.primary},models:{[selected.primary]:{params:{temperature:0.2}}},maxConcurrent:2},entries:{main:{}}},
+ agents:{ownership:'explicit',defaults:{workspace,skipBootstrap:true,skills:['workflow-decompose'],heartbeat:{every:'0m'},model:{primary:selected.primary},models:{[selected.primary]:{params:{temperature:0.2}}},maxConcurrent:2},entries:{main:{...(multi?{subagents:{allowAgents:['reviewer']}}:{})},...(multi?{reviewer:{workspace:reviewerWs}}:{})}},
  session:{dmScope:'per-channel-peer'},
  models:{mode:'merge',providers:{classroom:selected.provider}},
  cron:{enabled:cronOn},
  skills:{workshop:{autonomous:{mode:'off'}}},
  plugins:{slots:{memory:'none'},allow:[...(line?['line']:[])],entries:{'memory-core':{enabled:false},...(line?{line:{enabled:true}}:{})}},
- tools:{toolSearch:false,profile:'minimal',alsoAllow:['read','bundle-mcp',...(cronOn?['cron']:[]),...(webFetchOn?['web_fetch']:[])],deny:['group:runtime','write','edit','apply_patch','gateway','plugins','openclaw','heartbeat_respond',...(webFetchOn?['web_search','x_search']:['group:web']),'message','sessions_spawn','sessions_send'],fs:{workspaceOnly:true},elevated:{enabled:false},exec:{security:'deny',ask:'always'},agentToAgent:{enabled:false},sessions:{visibility:'agent'}},
+ tools:{toolSearch:false,profile:'minimal',alsoAllow:['read','bundle-mcp',...(multi?['sessions_list','sessions_history','sessions_send','sessions_spawn','agents_list']:[]),...(cronOn?['cron']:[]),...(webFetchOn?['web_fetch']:[])],deny:['group:runtime','write','edit','apply_patch','gateway','plugins','openclaw','heartbeat_respond',...(webFetchOn?['web_search','x_search']:['group:web']),'message',...(multi?[]:['sessions_spawn','sessions_send'])],fs:{workspaceOnly:true},elevated:{enabled:false},exec:{security:'deny',ask:'always'},agentToAgent:multi?{enabled:true,allow:['main','reviewer']}:{enabled:false},sessions:{visibility:multi?'all':'agent'}},
  ...(line?{bindings:[{agentId:'main',match:{channel:'line',accountId:'default'}}]}:{}),
  ...(line?{channels:{line:{enabled:true,dmPolicy:'pairing',groupPolicy:'disabled',channelAccessToken:'${LINE_CHANNEL_ACCESS_TOKEN}',channelSecret:'${LINE_CHANNEL_SECRET}'}}}:{})
 };
